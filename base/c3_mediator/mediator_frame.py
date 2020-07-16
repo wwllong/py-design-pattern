@@ -1,16 +1,20 @@
 # 中介模式-代码框架
 
+
 class InteractiveObject:
     """进行交互的对象"""
     pass
+
 
 class InteractiveObjectImplA:
     """实现类A"""
     pass
 
+
 class InteractiveObjectImplB:
     """实现类B"""
     pass
+
 
 class Meditor:
     """中介类"""

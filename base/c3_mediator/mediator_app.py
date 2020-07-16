@@ -5,11 +5,13 @@ from abc import ABCMeta, abstractmethod
 from enum import Enum
 # Python3.4 之后支持枚举Enum的语法
 
+
 class DeviceType(Enum):
-    "设备类型"
+    """设备类型"""
     TypeSpeaker = 1
     TypeMicrophone = 2
     TypeCamera = 3
+
 
 class DeviceItem:
     """设备项"""
@@ -56,11 +58,13 @@ class DeviceList:
 
     def getById(self, id):
         for item in self.__devices:
-            if( item.getId() == id):
+            if (item.getId() == id):
                 return item
         return None
 
+
 class DeviceMgr(metaclass=ABCMeta):
+    """设备管理类接口"""
 
     @abstractmethod
     def enumerate(self):
@@ -102,7 +106,7 @@ class SpeakerMgr(DeviceMgr):
 
 
 class DeviceUtil:
-    """设备工具类"""
+    """设备工具类（中介）"""
 
     def __init__(self):
         self.__mgrs = {}
