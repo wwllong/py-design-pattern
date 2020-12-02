@@ -1,15 +1,13 @@
-# 适配模式-基于框架实现电子书阅读器
+# 适配模式-实战电子书阅读器
 
 from abc import ABCMeta, abstractmethod, ABC
 # 引入ABCMeta和abstractmethod来定义抽象类和抽象方法
 import os
-
-
 # 导入os库,用于文件、路径相关的解析
 
 
 class Page:
-    """电子书第一页的内容"""
+    """电子书一页的内容"""
 
     def __init__(self, pageNum):
         self.__pageNum = pageNum
@@ -26,6 +24,9 @@ class Catalogue:
         self.__chapters = []
 
     def addChapter(self, title):
+        self.__chapters.append(title)
+
+    def showInfo(self):
         print("书名：" + self.__title)
         print("目录：")
         for chapter in self.__chapters:
@@ -67,7 +68,7 @@ class TxtBook(IBook, ABC):
         catelogue.addChapter("第二章 标题")
         return catelogue
 
-    def getPageCount(self, pageNum):
+    def getPageCount(self):
         return self.__pageCount
 
     def getPage(self, pageNum):
@@ -90,7 +91,7 @@ class EpubBook(IBook, ABC):
         catelogue.addChapter("第二章 标题")
         return catelogue
 
-    def getPageCount(self, pageNum):
+    def getPageCount(self):
         return self.__pageCount
 
     def getPage(self, pageNum):
@@ -171,8 +172,124 @@ class PdfAdapterBook(ThirdPdf, IBook):
         return catalogue
 
     def getPageCount(self):
-        return self.__thirdPdf.get
+        return self.__thirdPdf.pageSize()
 
     def getPage(self, pageNum):
-        """获取第pageNum页的内容"""
-        pass
+        page = self.__thirdPdf.page(pageNum)
+        print("将PdfPage的面向对象转换成Page的对象")
+        return Page(page.getPageNum())
+
+
+class Reader:
+    """阅读器"""
+
+    def __init__(self, name):
+        self.__name = name
+        self.__filePath = ""
+        self.__curBook = None
+        self.__curPageNum = -1
+
+    def __initBook(self, filePath):
+        self.__filePath = filePath
+        extName = os.path.splitext(filePath)[1]
+        if(extName.lower() == ".epub"):
+            self.__curBook = EpubBook()
+        elif(extName.lower() == ".txt"):
+            self.__curBook = TxtBook()
+        elif (extName.lower() == ".pdf"):
+            self.__curBook = PdfAdapterBook(ThirdPdf())
+        else:
+            self.__curBook = None
+
+    def openFile(self, filePath):
+        self.__initBook(filePath)
+        if(self.__curBook is not None):
+            rtn = self.__curBook.parseFile(filePath)
+            if(rtn):
+                self.__curPageNum = 1
+            return rtn
+        return False
+
+    def closeFile(self):
+        print("关闭 " + self.__filePath + "文件")
+        return True
+
+    def showCatalogue(self):
+        catalogue = self.__curBook.getCatalogue()
+        catalogue.showInfo()
+
+    def prePage(self):
+        print("往前翻一页：", end="")
+        return self.gotoPage(self.__curPageNum - 1)
+
+    def nextPage(self):
+        print("往后翻一页：", end="")
+        return self.gotoPage(self.__curPageNum + 1)
+
+    def gotoPage(self, pageNum):
+        if(pageNum > 1 and pageNum < self.__curBook.getPageCount() - 1):
+            self.__curPageNum = pageNum
+        print("显示第" + str(self.__curPageNum) + "页")
+        page = self.__curBook.getPage(self.__curPageNum)
+        page.getContent()
+        return page
+
+
+def testReaderBase(fileName, reader):
+    if (not reader.openFile(fileName)):
+        return
+    reader.showCatalogue()
+    reader.prePage()
+    reader.nextPage()
+    reader.nextPage()
+    reader.closeFile()
+    print()
+
+
+def testReader():
+    reader = Reader("阅读器")
+    testReaderBase("背影.txt", reader)
+    testReaderBase("解忧杂货铺.epub", reader)
+    testReaderBase("如何从生活中领悟设计模式.pdf", reader)
+
+
+if __name__ == '__main__':
+    testReader()
+
+"""
+背影.txt 文件解析成功
+书名：背影
+目录：
+    第一章 标题
+    第二章 标题
+往前翻一页：显示第1页
+往后翻一页：显示第2页
+往后翻一页：显示第3页
+关闭 背影.txt文件
+
+解忧杂货铺.epub 文件解析成功
+书名：解忧杂货铺
+目录：
+    第一章 标题
+    第二章 标题
+往前翻一页：显示第1页
+往后翻一页：显示第2页
+往后翻一页：显示第3页
+关闭 解忧杂货铺.epub文件
+
+第三方库解析PDF文件：如何从生活中领悟设计模式.pdf
+如何从生活中领悟设计模式.pdf文件解析成功
+将Outline结构的目录转换成Catalogue结构的目录
+书名：如何从生活中领悟设计模式
+目录：
+    第一章 PDF电子书标题
+    第二章 PDF电子书标题
+往前翻一页：显示第1页
+将PdfPage的面向对象转换成Page的对象
+往后翻一页：显示第1页
+将PdfPage的面向对象转换成Page的对象
+往后翻一页：显示第1页
+将PdfPage的面向对象转换成Page的对象
+关闭 如何从生活中领悟设计模式.pdf文件
+
+"""

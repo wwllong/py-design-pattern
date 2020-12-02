@@ -1,11 +1,11 @@
-# 适配模式-插座
+# 适配模式-插座适配器
 
 from abc import ABCMeta, abstractmethod
 # 引入ABCMeta和abstractmethod来定义抽象类和抽象方法
 
 
 class SocketEntity:
-    """接口类型定义"""
+    """插座接口类型定义"""
 
     def __init__(self, numOfPin, typeOfPin):
         self.__numOfPin = numOfPin  # 针数
@@ -96,3 +96,12 @@ def testSocket():
 
 if __name__ == "__main__":
     testSocket()
+
+"""
+[国标插座]：
+针脚数量：3，针脚类型：八字扁型； 符合中国标准，可以给大陆的电子设备充电！
+[英标插座]：
+针脚数量：3，针脚类型：T字方型； 不符合中国标准，不能给大陆的电子设备充电！
+[英标插座转换器]：
+针脚数量：3，针脚类型：八字扁型； 符合中国标准，可以给大陆的电子设备充电！
+"""

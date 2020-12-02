@@ -123,3 +123,12 @@ def testPerson():
 
 if __name__ == "__main__":
     testPerson()
+
+"""
+Lira身高170，完美如你，天生的美女！
+Demi身高166, 在高跟鞋的适配下，你身高不输高圆圆，气质不输范冰冰！
+Haiger和Lira是否为情侣的标准身高差：是, 差值：0
+Haiger和Demi是否为情侣的标准身高差：是, 差值：4
+Lira是否适合做接待员： 符合
+Demi是否适合做接待员： 符合
+"""
