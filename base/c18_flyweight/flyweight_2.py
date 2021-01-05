@@ -1,4 +1,4 @@
-# 享元模式 - 框架
+# 享元模式 - 基于框架实现
 
 from abc import ABCMeta, abstractmethod
 # 引入ABCMeta和abstractmethod来定义抽象类和抽象方法
