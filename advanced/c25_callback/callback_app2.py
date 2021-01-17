@@ -1,9 +1,9 @@
-# 回调在异步中的应用
-# =======================================================================================================================
+# 回调机制 在异步中的应用 - 下载文件
 import requests
 # 引入Http请求模块
 from threading import Thread
 # 引入线程模块
+
 
 class DownloadThread (Thread):
     """下载文件的线程"""
@@ -11,13 +11,13 @@ class DownloadThread (Thread):
     # 每次写文件的缓冲大小
     CHUNK_SIZE = 1024 * 512
 
-    def __init__(self, fileName, url, savePath, callBackProgerss, callBackFinished):
+    def __init__(self, fileName, url, savePath, callBackProgress, callBackFinished):
         super().__init__()
         self.__fileName = fileName
         self.__url = url
         self.__savePath = savePath
-        self.__callbackProgress = callBackProgerss
-        self.__callBackFionished = callBackFinished
+        self.__callbackProgress = callBackProgress
+        self.__callBackFinished = callBackFinished
 
     def run(self):
         readSize = 0
@@ -30,7 +30,7 @@ class DownloadThread (Thread):
                     file.write(chunk)
                     readSize += self.CHUNK_SIZE
                     self.__callbackProgress(self.__fileName, readSize, totalSize)
-        self.__callBackFionished(self.__fileName)
+        self.__callBackFinished(self.__fileName)
 
 
 def testDownload():
