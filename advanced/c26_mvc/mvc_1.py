@@ -16,7 +16,7 @@ class Camera:
         self.__name = name
         self.__aperture = 0.0       # 光圈
         self.__shutterSpeed = 0     # 快门速度
-        self.__ligthSensitivity = 0 # 感光度
+        self.__lightSensitivity = 0 # 感光度
         self.__lens = Lens()        # 镜头
         self.__sdCard = SDCard()    # SD卡
         self.__display = Display()  # 显示器
@@ -41,11 +41,11 @@ class Camera:
         print("接收光线并处理成数字信号")
         return Image(6000, 4000, imageLighting)
 
-    def setting(self, aperture, shutterSpeed, ligthSensitivity):
+    def setting(self, aperture, shutterSpeed, lightSensitivity):
         """设置相机的拍摄属性：光圈、快门、感光度"""
         self.__aperture = aperture
         self.__shutterSpeed = shutterSpeed
-        self.__ligthSensitivity = ligthSensitivity
+        self.__lightSensitivity = lightSensitivity
 
     def focusing(self, focusMode):
         """对焦，要通过镜头来调节焦点"""
@@ -54,7 +54,7 @@ class Camera:
     def showInfo(self):
         """显示相机的属性"""
         print("%s的设置   光圈：F%0.1f  快门：1/%d  感光度：ISO %d" %
-              (self.__name, self.__aperture, self.__shutterSpeed, self.__ligthSensitivity))
+              (self.__name, self.__aperture, self.__shutterSpeed, self.__lightSensitivity))
 
 
 class Lens:
@@ -108,7 +108,7 @@ class Image:
         self.__pixels = pixels
 
     def getWidth(self):
-        return  self.__width
+        return self.__width
 
     def getHeight(self):
         return self.__height
